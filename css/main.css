@@ -1,0 +1,143 @@
+body {
+    background-color: lavender;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    padding: 10px;
+    background-color: plum;
+    text-align: center;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #9999CC;
+}
+
+h1 {
+    margin-top: 100px;
+    font-family: "chapbook", sans-serif;
+    color: #313131;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    text-align: center;
+    font-size: 75px;
+}
+
+h3 {
+    font-family:"big caslon", sans-serif;
+    color: #313131;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    text-align: center;
+    margin-top: 80px;
+    font-size: 50px;
+}
+
+p {
+    font-family:"big caslon", sans-serif;
+    color: #313131;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 20px
+}
+
+.form {
+    font-family:"big caslon", sans-serif;
+    text-align: center;
+    color: #313131;
+    text-rendering: optimizeLegibility;
+    font-size: 30px;
+}
+
+.div {
+    font-family:"big caslon", sans-serif;
+}
+
+.input {
+    font-family:"big caslon", sans-serif;
+    font-size: 25px;
+    text-align: center;
+    padding: 5px;
+    margin-top: 15px;
+}
+
+.button,
+input[type="button"] {
+    margin-left: 450px;
+    margin-top: 25px;
+}
+
+.button i {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 40px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 15px;
+}
+
+.popup-background {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: none;
+}
+
+.popup-container {
+    position: absolute;
+    margin: auto;
+    width: 600px;
+    height: 205px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px;
+}
+
+.popup-title {
+    width: 100%;
+    text-align: center;
+}
+
+.popup-buttons {
+    position: relative;
+    top: -25px;
+    width: 100%;
+    text-align: right;
+}
+
+.popup-loading {
+    visibility: hidden;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
+    border-top: 10px solid rgba(0, 0, 0, 0.2);
+    border-right: 10px solid rgba(0, 0, 0, 0.2);
+    border-left: 10px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 10px solid rgba(0, 0, 0, 0.2);
+}
