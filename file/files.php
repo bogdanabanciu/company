@@ -1,10 +1,10 @@
 <?php
-    include("../class/Employee.php");
-    include("../class/Company.php");
-    include("../class/Department.php");
-    include("../class/Dependent.php");
-    include("../class/Project.php");
-    include("../class/Database.php");
+    require_once("../class/Employee.php");
+    require_once("../class/Company.php");
+    require_once("../class/Department.php");
+    require_once("../class/Dependent.php");
+    require_once("../class/Project.php");
+    require_once("../class/Database.php");
 
     define("DB_HOST", "192.168.33.104");
     define("DB_USER", "root");

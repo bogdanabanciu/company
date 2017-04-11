@@ -1,5 +1,7 @@
 <?php
 
+require_once("Person.php");
+
 class Dependent extends Person
 {
     private $employee;
@@ -18,8 +20,4 @@ class Dependent extends Person
     {
         return $this->employee;
     }
-
-
 }
-
-?>

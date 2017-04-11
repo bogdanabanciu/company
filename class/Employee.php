@@ -1,19 +1,17 @@
 <?php
 
+require_once("Person.php");
+require_once("Department.php");
+
 class Employee extends Person
 {
     private $department = null;
-    private $supervisor = null;   //nu toti angajatii sunt supervisori
+    private $supervisor = null;
     private $hiringDate;
     private $hoursWorkedWeekly;
     private $salary;
     private $dependents = array();
-    //TODO: do the same for projects
-   /* function __toString()
-    {
 
-    }
-*/
     public function __construct(
         $id,
         $name,
@@ -22,7 +20,7 @@ class Employee extends Person
         $address,
         $sex,
         $birthDate,
-        Department $department,
+        $department,    //de tip Department
         Employee $supervisor,
         $hiringDate,
         $hoursWorkedWeekly,
@@ -36,6 +34,11 @@ class Employee extends Person
         $this-> salary = $salary;
     }
 
+    public function __toString()
+    {
+        $result = "";
+        return $result;
+    }
     /**
      * @return Department|null
      */
@@ -49,17 +52,12 @@ class Employee extends Person
         $this->dependents.array_push($dependent);
     }
 
-    public function removeDependent(Dependent $dependent)
+   /* public function removeDependent(Dependent $dependent)
     {
         //TODO: remove if $this->dependents[$i]->getId() == $dependent->getId()
-        /* not sure */
-        /*if($this->dependents->getId() == $dependent->getId())
-        {
-            $this->dependents = array_diff($this->dependents, array($dependent->getId()));  //source: http://stackoverflow.com/questions/2448964/php-how-to-remove-specific-element-from-an-array
-        }*/
 
     }
-
+*/
 
     /**
      * @return Employee|null

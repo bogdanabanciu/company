@@ -1,4 +1,9 @@
 <?php
+
+require_once("Employee.php");
+require_once("Department.php");
+require_once("Project.php");
+
 class Database
 {
     private $host;
@@ -48,7 +53,7 @@ class Database
         $stmt = null;
 
         if($row)
-        { //TODO:  write all the attributes for Employee + $row[...]  == DONE
+        {
             $id = $row['id'];
             $name = $row['name'];
             $surname = $row['surname'];
@@ -66,7 +71,6 @@ class Database
             $supervisor = $this->getEmployeeById($supervisorId);
 
             $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisor, $hiringDate, $hoursWorkedWeekly, $salary);
-            //TODO + instead of department id, use the variables above   == DONE
         }
         $this->loadDependents($employee);
         return $employee;
@@ -99,7 +103,6 @@ class Database
 
     public function getEmployeeById($id)
     {
-        //TODO SELECT as above for id == DONE
         $stmt = null;
         $employee  = null;
 
@@ -136,7 +139,6 @@ class Database
 
     public function getDepartmentById($id)
     {
-        //TODO SELECT as above for id  == DONE
         $stmt = null;
         $department = null;
 
