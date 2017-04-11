@@ -23,16 +23,8 @@ class Database
 
     public function connectToDatabase()
     {
-        try
-        {
-            $this->conn = new PDO("mysql:host= $this->host;dbname=$this->db", $this->user, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //set the PDO error mode to exception
-
-        }
-        catch(PDOException $e)
-        {
-            echo "Connection failed: " , $e->getMessage();
-        }
+        $this->conn = new PDO("mysql:host=$this->host;dbname=$this->db", $this->user, $this->password);
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //set the PDO error mode to exception
     }
 
     /**
@@ -41,9 +33,40 @@ class Database
      * @return Employee|null
      */
 
+    public function getEmployees()
+    {
+        $result = array();
+        $sql = "SELECT * FROM employees";
+
+        foreach($this->conn->query($sql) as $row)
+        {
+            $id = $row['id'];
+            $name = $row['name'];
+            $surname = $row['surname'];
+            $cnp = $row['cnp'];
+            $address = $row['address'];
+            $sex = $row['sex'];
+            $birthDate = $row['birth_date'];
+            $hiringDate = $row['hiring_date'];
+            $hoursWorkedWeekly = $row['hours_worked_weekly'];
+            $salary = $row['salary'];
+
+            $departmentId = $row['id_department'];
+            $department = $this->getDepartmentById($departmentId);
+            $supervisorId = $row['id_supervisor'];
+            //$supervisor = $this->getEmployeeById($supervisorId);
+
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $this->loadDependents($employee);
+
+            array_push($result, $employee);
+        }
+
+        return $result;
+    }
+
     public function getEmployeeByName($name, $surname)
     {
-        $stmt = null;
         $employee = null;
 
         $sql = "SELECT * FROM employees WHERE name= :name AND surname= :surname";
@@ -68,12 +91,59 @@ class Database
             $departmentId = $row['id_department'];
             $department = $this->getDepartmentById($departmentId);
             $supervisorId = $row['id_supervisor'];
-            $supervisor = $this->getEmployeeById($supervisorId);
+            //$supervisor = $this->getEmployeeById($supervisorId);
 
-            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisor, $hiringDate, $hoursWorkedWeekly, $salary);
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $this->loadDependents($employee);
         }
-        $this->loadDependents($employee);
+
         return $employee;
+    }
+
+    public function searchEmployees($search)
+    {
+        $result = array();
+
+        $searchStrings = explode(' ', $search, 2);
+
+        if ( count($searchStrings) == 1 )
+        {
+            $sql = "SELECT * FROM employees WHERE name LIKE :search OR surname LIKE :search";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array(':search' => $search . '%'));
+        }
+        else
+        {
+            $sql = "SELECT * FROM employees WHERE name LIKE :search0 AND surname LIKE :search1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(array(':search0' => $searchStrings[0] . '%', ':search1' => $searchStrings[1] . '%'));
+        }
+
+        while ( $row = $stmt->fetch() )
+        {
+            $id = $row['id'];
+            $name = $row['name'];
+            $surname = $row['surname'];
+            $cnp = $row['cnp'];
+            $address = $row['address'];
+            $sex = $row['sex'];
+            $birthDate = $row['birth_date'];
+            $hiringDate = $row['hiring_date'];
+            $hoursWorkedWeekly = $row['hours_worked_weekly'];
+            $salary = $row['salary'];
+
+            $departmentId = $row['id_department'];
+            $department = $this->getDepartmentById($departmentId);
+            $supervisorId = $row['id_supervisor'];
+            //$supervisor = $this->getEmployeeById($supervisorId);
+
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $this->loadDependents($employee);
+
+            array_push($result, $employee);
+        }
+
+        return $result;
     }
 
     private function loadDependents(Employee $employee)
@@ -132,6 +202,7 @@ class Database
             $supervisor = $this->getEmployeeById($supervisorId);
 
             $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisor,$hiringDate, $hoursWorkedWeekly, $salary);
+            $this->loadDependents($employee);
         }
 
         return $employee;

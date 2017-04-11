@@ -4,13 +4,14 @@
         <meta charset="utf-8">
         <!--  LINKS  -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/main.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <!--  End of LINKS  -->
         <title>Zitec</title>
     </head>
     <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
-        <nav class="navbar navbar-default navbar-fixed-top" style="background-color: #2b669a">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background: url(bgmypage.jpg); border:none;">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -30,7 +31,7 @@
                 </div>
             </div>
         </nav>
-        <div class="jumbotron text-center" style="background-color: #2b669a">
+        <div class="jumbotron text-center" style="background: url(bgmypage.jpg)">
             <h1>Zitec</h1>
             <p>We enjoy finding solutions for challenging business problems and making our customers happy, all while having fun!</p>
         </div>

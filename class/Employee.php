@@ -1,11 +1,11 @@
 <?php
 
 require_once("Person.php");
-require_once("Department.php");
 
 class Employee extends Person
 {
     private $department = null;
+    private $supervisorId;
     private $supervisor = null;
     private $hiringDate;
     private $hoursWorkedWeekly;
@@ -21,14 +21,14 @@ class Employee extends Person
         $sex,
         $birthDate,
         $department,    //de tip Department
-        Employee $supervisor,
+        $supervisorId,
         $hiringDate,
         $hoursWorkedWeekly,
         $salary)
     {
         parent::__construct($id, $name, $surname, $cnp, $address, $sex, $birthDate);
         $this->department = $department;
-        $this->supervisor = $supervisor;
+        $this->supervisorId = $supervisorId;
         $this->hiringDate = $hiringDate;
         $this->hoursWorkedWeekly = $hoursWorkedWeekly;
         $this-> salary = $salary;
@@ -36,9 +36,32 @@ class Employee extends Person
 
     public function __toString()
     {
-        $result = "";
+        $result = "Name: " . $this->getName() . ", Surname: " . $this->getSurname() . ", CNP: " . $this->getCnp() ;
         return $result;
     }
+
+    public function toTableRow($rowIndex)
+    {
+        $row = "<tr>" .
+            "<td>$rowIndex</td><td>" .
+            $this->getName() . "</td><td>" .
+            $this->getSurname() . "</td><td>" .
+            $this->getCnp() . "</td><td>" .
+            $this->getAddress() . "</td><td>" .
+            $this->getSex() . "</td><td>" .
+            $this->getBirthDate() . "</td><td>" .
+            $this->getHiringDate() . "</td><td>" .
+            $this->getDepartment()->getDepartmentName() . "</td><td>";
+            if ( $this->getSupervisor() )
+                $row .= $this->getSupervisor()->getName() . ' ' . $this->getSupervisor()->getSurname() . "</td><td>";
+            else
+                $row .= "No supervisor</td><td>";
+            $row .= $this->getHoursWorkedWeekly() . "</td><td>" .
+            $this->getSalary() . "</td></tr>";
+
+            return $row;
+    }
+
     /**
      * @return Department|null
      */
@@ -52,19 +75,21 @@ class Employee extends Person
         $this->dependents.array_push($dependent);
     }
 
-   /* public function removeDependent(Dependent $dependent)
-    {
-        //TODO: remove if $this->dependents[$i]->getId() == $dependent->getId()
-
-    }
-*/
 
     /**
      * @return Employee|null
      */
     public function getSupervisor()
     {
-        return $this->supervisor;
+        if ( $this->supervisor )
+            return $this->supervisor;
+
+        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        $db->connectToDatabase();
+
+        $this->supervisor = $db->getEmployeeById($this->supervisorId);
+
+        return $this->supervisorId;
     }
 
     /**
