@@ -22,6 +22,14 @@ class Department
     {
         return $this->id;
     }
+
+    public function toTableRow($rowIndex)
+    {
+        $row = "<tr onclick=\"location.href='departmentInfo.php?id=" . $this->getId() . "';\"><td>
+                    $rowIndex</td><td style='text-align: center;'>".
+                    $this->getDepartmentname() . "</td>";
+        return $row;
+    }
 }
 
 ?>

@@ -9,6 +9,26 @@
 
     switch ($action){
         case ACTION_ADD_DEPARTMENT:
+            if(isset($_POST['id']) && isset($_POST['department_name'])) {
+                $department_id = test_input($_POST['id']);
+                $department_name = test_input($_POST['department_name']);
+
+                $sql = "INSERT INTO department(id, name) VALUES(':id', ':department_name')";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':id', $department_id, PDO::PARAM_INT);
+                $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
+
+                if ($stmt->execute()) {
+
+                    echo "Success";
+                    //header('location: ../interface/departmentInfo.php?id=' . $this->conn->lastInsertId());
+                } else {
+                    throw new Exception("ERROR: ACTION ADD Department: INSERT problems");
+                }
+            }
+            else{
+                throw new Exception("ERROR: ACTION ADD Department: not all required parameters are set");
+            }
 
             break;
         case ACTION_EDIT_DEPARTMENT:

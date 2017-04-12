@@ -33,6 +33,7 @@ class Database
      * @return Employee|null
      */
 
+    //=============================== EMPLOYEES ==================================
     public function getEmployees()
     {
         $result = array();
@@ -208,6 +209,31 @@ class Database
         return $employee;
     }
 
+    //======================================= DEPARTMENT ==========================================
+
+    /*public function addDepartment($add)
+    {
+        require_once('../file/actions.php');
+    }*/
+
+    public function getDepartment()
+    {
+        $result = array();
+        $sql = "SELECT * FROM department";
+
+        foreach($this->conn->query($sql) as $row)
+        {
+            $id = $row['id'];
+            $name = $row['department_name'];
+
+            $department = new Department($name);
+
+            array_push($result, $department);
+        }
+
+        return $result;
+    }
+
     public function getDepartmentById($id)
     {
         $stmt = null;
@@ -252,6 +278,30 @@ class Database
         }
 
         return $department;
+    }
+
+    //======================================== PROJECT =============================================
+
+    public function getProject()
+    {
+        $result = array();
+        $sql = "SELECT * FROM project";
+
+        foreach($this->conn->query($sql) as $row)
+        {
+            $id = $row['id'];
+            $name = $row['name'];
+            $departmentId = $row['id_department'];
+            $department = $this->getDepartmentById($departmentId);
+            $managerId = $row['id_manager'];
+            $manager = $this->getEmployeeById($managerId);
+
+            $project = new Project($name, $manager);
+
+            array_push($result, $project);
+        }
+
+        return $result;
     }
 
     public function getProjectById($id)

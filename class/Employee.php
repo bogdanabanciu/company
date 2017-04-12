@@ -42,6 +42,28 @@ class Employee extends Person
 
     public function toTableRow($rowIndex)
     {
+        $row = "<tr onclick=\"location.href='employeeInfo.php?id=" . $this->getId() . "';\">".
+            "<td>$rowIndex</td><td>" .
+            $this->getName() . "</td><td>" .
+            $this->getSurname() . "</td><td>" .
+           // $this->getCnp() . "</td><td>" .
+          //  $this->getAddress() . "</td><td>" .
+          //  $this->getSex() . "</td><td>" .
+           // $this->getBirthDate() . "</td><td>" .
+           // $this->getHiringDate() . "</td><td>" .
+            $this->getDepartment()->getDepartmentName() . "</td><td>";
+           /* if ( $this->getSupervisor() )
+                $row .= $this->getSupervisor()->getName() . ' ' . $this->getSupervisor()->getSurname() . "</td><td>";
+            else
+                $row .= "No supervisor</td><td>";
+            $row .= $this->getHoursWorkedWeekly() . "</td><td>" .
+            $this->getSalary() . "</td></tr>";*/
+
+            return $row;
+    }
+
+    /*public function toTableRow($rowIndex)
+    {
         $row = "<tr>" .
             "<td>$rowIndex</td><td>" .
             $this->getName() . "</td><td>" .
@@ -60,7 +82,7 @@ class Employee extends Person
             $this->getSalary() . "</td></tr>";
 
             return $row;
-    }
+    }*/
 
     /**
      * @return Department|null

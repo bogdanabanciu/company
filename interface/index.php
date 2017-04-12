@@ -24,16 +24,16 @@
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#about">ABOUT</a></li>
-                        <li><a href="#employee">EMPLOYEES</a></li>
-                        <li><a href="#department">DEPARTMENTS</a></li>
-                        <li><a href="#project">PROJECTS</a></li>
+                        <li><a href="employeeList.php">EMPLOYEES</a></li>
+                        <li><a href="departmentList.php">DEPARTMENTS</a></li>
+                        <li><a href="projectList.php">PROJECTS</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
         <div class="jumbotron text-center" style="background: url(bgmypage.jpg)">
-            <h1>Zitec</h1>
-            <p>We enjoy finding solutions for challenging business problems and making our customers happy, all while having fun!</p>
+            <h1 style="color: white;">Zitec</h1>
+            <p style="color: white;">We enjoy finding solutions for challenging business problems and making our customers happy, all while having fun!</p>
         </div>
         <div id="about" class="container" style="padding: 50px 50px">
             <div class="row">
@@ -52,90 +52,6 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div id="employee" class="container">
-            <div class="row">
-                <form>
-                    <div class="input-group">
-                        <input type="search" class="form-control" size="75" placeholder="Name" required>
-                        <input type="search" class="form-control" size="75" placeholder="Surname" required>
-                    </div>
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-danger">Submit</button>
-                    </div>
-                </form>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Surname</th>
-                            <th>CNP</th>
-                            <th>Address</th>
-                            <th>Sex</th>
-                            <th>Birth Date</th>
-                            <th>Hiring Date</th>
-                            <th>Department</th>
-                            <th>Supervisor</th>
-                            <th>Hours Worked Weekly</th>
-                            <th>Salary</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            while($row = $result->fetch()){
-                        ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['name'] ?></td>
-                            <td><?= $row['surname'] ?></td>
-                            <td><?= $row['cnp'] ?></td>
-                            <td><?= $row['address'] ?></td>
-                            <td><?= $row['sex'] ?></td>
-                            <td><?= $row['birth_date'] ?></td>
-                            <td><?= $row['hiring_date'] ?></td>
-                            <td><?= $row['id_department'] ?></td>
-                            <td><?= $row['id_supervisor'] ?></td>
-                            <td><?= $row['hours_worked_weekly'] ?></td>
-                            <td><?= $row['salary'] ?></td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            <?php
-                $sql = "SELECT COUNT(id) FROM employees";
-                $result = $this->conn->query($sql);
-                $row = $result->fetchAll(PDO::FETCH_ASSOC);
-                $totalRecords = $row[0];
-                $totalPages = ceil($totalRecords / $limit);
-                $paginationLink = "<div class='pagination'>";
-
-                for($i = 0; $i <= $totalPages; $i++){
-                    $paginationLink .= "<a href=index.php?page=". $i . "'>" . $i . "</a>";
-                }
-
-                echo $paginationLink . "</div>";
-            ?>
-            </div>
-        </div>
 
     </body>
 </html>
-<?php
-    $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $db->connectToDatabase();
-
-    $limit =  5;
-
-    if(isset($_GET['page'])){
-        $page = $_GET['page'];
-    }
-    else {
-        $page = 1;
-    }
-
-    $startRow = ($page - 1) * $limit;
-
-    $sql ="SELECT * FROM employees LIMIT $startRow, $limit";
-    $result = $this->conn->query($sql);
-?>
