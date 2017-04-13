@@ -36,7 +36,7 @@ class Employee extends Person
 
     public function __toString()
     {
-        $result = "Name: " . $this->getName() . ", Surname: " . $this->getSurname() . ", CNP: " . $this->getCnp() ;
+        $result = $this->getName() . " " . $this->getSurname();
         return $result;
     }
 
@@ -60,6 +60,13 @@ class Employee extends Person
             $this->getSalary() . "</td></tr>";*/
 
             return $row;
+    }
+
+    public function toSelectOption()
+    {
+        $row = "<option value=\"" . $this->getId() . "';\">" . $this->getName(). " " . $this->getSurname() . "</option>";
+
+        return $row;
     }
 
     /*public function toTableRow($rowIndex)
@@ -113,6 +120,20 @@ class Employee extends Person
 
         return $this->supervisorId;
     }
+
+   /* public function getSupervisorByName()
+    {
+        if ( $this->supervisor )
+            return $this->supervisor;
+
+        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        $db->connectToDatabase();
+
+        $this->supervisor = $db->getEmployeeByName($this->getName(), $this->getSurname());
+
+        return $this->supervisor;
+    }*/
+
 
     /**
      * @return mixed

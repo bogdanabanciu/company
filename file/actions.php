@@ -17,19 +17,34 @@
                 $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
 
                 if ($stmt->execute()) {
-
                     echo "Success";
-                    //header('location: ../interface/departmentInfo.php?id=' . $this->conn->lastInsertId());
                 } else {
-                    throw new Exception("ERROR: ACTION ADD Department: INSERT problems");
+                    echo "ERROR: ACTION ADD Department: INSERT problems";
                 }
             }
             else{
-                throw new Exception("ERROR: ACTION ADD Department: not all required parameters are set");
+               echo "ERROR: ACTION EDIT Department: not all required parameters are set";
             }
 
             break;
         case ACTION_EDIT_DEPARTMENT:
+            if(isset($_POST['id']) && isset($_POST['department_name'])){
+                $department_id = test_input($_POST['id']);
+                $department_name = test_input($_POST['department_name']);
+
+                $sql = "UPDATE department SET name=':name' WHERE id=':id'";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bindParam(':id', $department_id, PDO::PARAM_INT);
+                $stmt->bindParam(':department_name', $department_name, PDO::PARAM_STR);
+
+                if ($stmt->execute()) {
+                    echo "Success";
+                } else {
+                    echo "ERROR: ACTION ADD Department: INSERT problems";
+                }
+            }
+            else
+                echo "ERROR: ACTION EDIT Department: not all required parameters are set";
 
             break;
         case ACTION_DELETE_DEPARTMENT:
@@ -57,7 +72,7 @@
                 try {
                     $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
                     $db->connectToDatabase();
-                    //TODO:
+
                     $result = $db->addEmployee($department, $supervisor, $name, $surname, $cnp, $address, $sex, $birthDate, $hiringDate, $salary, $hoursWorkedWeekly);
 
                     if ( $result )
@@ -75,7 +90,6 @@
             break;
 
         case ACTION_EDIT_EMPLOYEE:
-            $stmt = null;
             if(isset($_POST['id']) && isset($_POST['id_department'])
                 && isset($_POST['id_supervisor']) && isset($_POST['name']) && isset($_POST['surname'])
                 && isset($_POST['cnp']) && isset($_POST['address']) && isset($_POST['sex'])

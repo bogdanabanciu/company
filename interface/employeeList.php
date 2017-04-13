@@ -31,7 +31,6 @@
             </div>
         </div>
     </nav>
-    <!-- MODAL Neterminat .. trebuie legat cu JS -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmployeeModal" style="float:right;background-color: #885EAD; border-color: #885EAD;">
         Add Employee
     </button>
@@ -61,25 +60,51 @@
                             <input id="addEmployeeCNP" type="text" name="cnp" required/>
                         </div>
                         <div>
-                            <label>Address: </label>
+                            <label>Address:</label>
                             <input id="addEmployeeAddress" type="text" name="address" required/>
                         </div>
                         <div>
-                            <label>Sex: </label>
+                            <label>Sex:</label>
                             <input id="addEmployeeSex" type="text" name="sex" required/>
                         </div>
                         <div>
-                            <label>Birth Date: </label>
+                            <label>Birth Date:</label>
                             <input id="addEmployeeBirthDate" type="datetime" name="birth_date" required/>
                         </div>
                         <!-- TODO: departament dropdown list -->
-                        <div class="dropdown">
-                            <label>Department</label>
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
-                                    style="width: 400px; text-align: right; background-color: white; border-color: lightgrey;">
-                                <span class="caret"></span></button>
-                            <input type="hidden" name="search">
-                            <ul class="dropdown-menu" style="width: 400px; padding: 15px">
+                        <div>
+                            <label>Department:</label>
+                            <select id="addEmployeeDepartment" class="selectpicker" style="width: 400px; background-color: white; border-color: lightgrey; padding: 10px">
+                                <?php
+
+                                    require_once('../file/files.php');
+                                    require_once('../file/validation.php');
+
+                                    try {
+                                        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+                                        $db->connectToDatabase();
+
+                                        $departments = $db->getDepartments();
+
+                                        if(count($departments) == 0)
+                                            echo "There are no departments";
+                                        else {
+                                            foreach($departments as $department){
+                                                echo $department->toSelectOption();
+                                            }
+                                        }
+                                    }
+                                    catch(PDOException $exception)
+                                    {
+                                        echo "Error: connection failed" . $exception->getMessage();
+                                    }
+                                    ?>
+                            </select>
+                        </div>
+                        <div>
+                            <!-- TODO: supervisor dropdown list: all employees (name and surname only) -->
+                            <label>Supervisor:</label>
+                            <select id="addEmployeeSupervisor" class="selectpicker" style="width: 400px; background-color: white; border-color: lightgrey; padding: 10px">
                                 <?php
 
                                 require_once('../file/files.php');
@@ -89,14 +114,14 @@
                                     $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
                                     $db->connectToDatabase();
 
-                                    $departments = $db->getDepartments();
+                                    $employees = $db->getEmployees();
 
-                                    if(count($departments) == 0)
-                                        echo "There are no departments";
+                                    if(count($employees) == 0)
+                                        echo "There are no employees!";
                                     else {
-                                        for($i = 0; $i < count($departments); $i++)
+                                        foreach($employees as $employee)
                                         {
-                                            echo $departments[$i]->toTableName($i + 1);
+                                            echo $employee->toSelectOption();
                                         }
                                     }
                                 }
@@ -105,50 +130,29 @@
                                     echo "Error: connection failed" . $exception->getMessage();
                                 }
                                 ?>
-                            </ul>
+                            </select>
                         </div>
-                        <!-- TODO: supervisor dropdown list: all employees (name and surname only) -->
                         <div>
-                            <label>Hiring Date: </label>
+                            <label>Hiring Date:</label>
                             <input id="addEmployeeHiringDate" type="datetime" name="hiring_date" required/>
                         </div>
                         <div class="div">
-                            <label>Hours worked weekly: </label>
+                            <label>Hours worked weekly:</label>
                             <input id="addEmployeeHoursWorkedWeekly" type="number" name="hours_worked_weekly" required/>
                         </div>
                         <div>
-                            <label>Salary: </label>
+                            <label>Salary:</label>
                             <input id="addEmployeeSalary" type="number" name="salary" required/>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addEmployee()">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="addEmployee()" style="background-color: #885EAD; border-color: #885EAD;">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
-    <!--
-    <div class="modal fade">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Employee</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" style="background-color: #885EAD; border-color: #885EAD;">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #885EAD; border-color: #885EAD;">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>-->
     <br>
     <h1>Employees</h1>
     <br>

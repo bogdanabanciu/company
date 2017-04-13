@@ -13,11 +13,8 @@ $db->connectToDatabase();
 
 $employees = $db->searchEmployees("Bogdana");
 
-//$deparments = $db->searchDepartment("Development");
-
 $departments = $db->getDepartments();
 
-foreach($departments as $department)
-{
-
+foreach($departments as $department){
+    echo $department;
 }

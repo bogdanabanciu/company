@@ -1,7 +1,16 @@
+/*$(document).ready(function(){
+    $(".dropdown-menu li a").click(function(){
+        $("#selected").text($(this).text());
+    });
+});
+*/
+
 function addEmployee() {
     var _action = $('#addEmployeeAction'). val();
+    var _department = $('#addEmployeeDepartment').val();
+    var _supervisor = $('#addEmployeeSupervisor').val();
     var _name = $('#addEmployeeName').val();
-    var _surname = $('#addEmployeeSurname').val();
+    var _surname = $('#addEmployeeSurname').val();''
     var _cnp = $('#addEmployeeCNP').val();
     var _address = $('#addEmployeeAddress').val();
     var _sex = $('#addEmployeeSex').val();
@@ -12,9 +21,11 @@ function addEmployee() {
 
     alert("am primit ceva");
 
-    if(_name === '' || _surname === '' || _cnp === '' || _address === '' || _sex === '' || _hiringDate === '' ||
+    if(_department === '' || _name === '' || _surname === '' || _cnp === '' || _address === '' || _sex === '' || _hiringDate === '' ||
         _birthDate === '' || _salary === '' || _hoursWorkedWeekly === '')
     {
+        $('#addEmployeeDepartment').attr('placeholder', 'Enter name');
+        $('#addEmployeeSupervisor').attr('placeholder', 'Enter name');
         $('#addEmployeeName').attr('placeholder', 'Enter name');
         $('#addEmployeeSurname').attr('placeholder', 'Enter surname');
         $('#addEmployeeCNP').attr('placeholder', 'Enter CNP');
@@ -31,6 +42,8 @@ function addEmployee() {
             '../file/actions.php',
             {
                 action: _action,
+                department: _department,
+                supervisor: _supervisor,
                 name: _name,
                 surname: _surname,
                 cnp: _cnp,

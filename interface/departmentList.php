@@ -67,7 +67,7 @@
                     $departments = $db->addDepartment(test_input($_GET['add']));
                 }
                 else*/
-                $departments = $db->getDepartment();
+                $departments = $db->getDepartments();
 
                 if(count($departments) == 0)
                     echo "There are no departments";

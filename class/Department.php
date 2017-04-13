@@ -24,6 +24,13 @@ class Department
         return $this->id;
     }
 
+    public function __toString()
+    {
+        $result = "Department name: " . $this->getDepartmentName() . "<br>";
+
+        return $result;
+    }
+
     public function toTableRow($rowIndex)
     {
         $row = "<tr onclick=\"location.href='departmentInfo.php?id=" . $this->getId() . "';\"><td>
@@ -32,10 +39,10 @@ class Department
         return $row;
     }
 
-    public function toTableName($rowIndex)
+    public function toSelectOption()
     {
-        $row = "<li>".
-            $this->getDepartmentname() . "</li>";
+        $row = "<option value=\"$this->id\">" .
+            $this->departmentName . "</option>";
 
         return $row;
     }

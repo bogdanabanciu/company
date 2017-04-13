@@ -1,64 +1,86 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Employee Information</title>
-    <!--  CSS  -->
-    <link rel="stylesheet" href="../css/main.css">
-    <!--  End of CSS  -->
-
-</head>
-<body>
-            <form action="" method="post" class="form" >
-                         <div class="div">
-                             <label>Name: </label>
-                             <input class="input" type="text" name="name" value="<?php print $name ?>"
-                                    placeholder="" required autofocus style="margin-left: 33px"/>
-                         </div>
-                         <div class="div">
-                             <label>Surname: </label>
-                             <input class="input" type="text" name="surname" value="<?php echo $surname ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>CNP: </label>
-                             <input class="input" type="text" name="cnp" value="<?php echo $cnp ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Address: </label>
-                             <input class="input" type="text" name="address" value="<?php echo $address ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Sex: </label>
-                             <input class="input" type="text" name="sex" value="<?php echo $sex ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Birth Date: </label>
-                             <input class="input" type="datetime" name="birth_date"
-                                    value="<?php echo date_format($birthDate, 'Y-m-d H:i:s'); ?>" placeholder=""
-                                    required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Hiring Date: </label>
-                             <input class="input" type="datetime" name="hiring_date"
-                                    value="<?php echo date_format($hiringDate, 'Y-m-d H:i:s'); ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Hours worked weekly: </label>
-                             <input class="input" type="number" name="hours_worked_weekly"
-                                    value="<?php echo $hoursWorkedWeekly ?>" placeholder="" required
-                                    autofocus/>
-                         </div>
-                         <div class="div">
-                             <label>Salary: </label>
-                             <input class="input" type="number" name="salary" value="<?php echo $salary ?>"
-                                    placeholder="" required autofocus/>
-                         </div>
+    <head>
+        <meta charset="utf-8">
+        <!--  LINKS  -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="../js/buttons.js"></script>
+        <!--  End of LINKS  -->
+        <title>Zitec</title>
+    </head>
+    <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60" style="padding: 85px">
+    <nav class="navbar navbar-default navbar-fixed-top" style="background: url(bgmypage.jpg); border:none;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="index.php#about">ABOUT</a></li>
+                    <li><a href="employeeList.php">EMPLOYEES</a></li>
+                    <li><a href="departmentList.php">DEPARTMENTS</a></li>
+                    <li><a href="projectList.php">PROJECTS</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row text-center">
+            <form action="" method="post" class="employeeInfoForm" style="padding: 80px">
+                <div>
+                    <label>Name: </label>
+                    <input type="text" name="name" value="" required autofocus/>
+                </div>
+                <div>
+                    <label>Surname:</label>
+                    <input type="text" name="surname" value="" required/>
+                </div>
+                <div>
+                    <label>Department:</label>
+                    <select id="editEmployeeDepartment" class="selectpicker" style="width: 600px; background-color: white; border-color: lightgrey;">
+                    </select>
+                </div>
+                <div>
+                    <label>Supervisor</label>
+                    <select id="editEmployeeSupervisor" class="selectpicker" style="width: 600px; background-color: white; border-color: lightgrey;">
+                    </select>
+                </div>
+                <div>
+                    <label>CNP:</label>
+                    <input type="text" name="cnp" value="" required/>
+                </div>
+                <div>
+                    <label>Address:</label>
+                    <input type="text" name="address" value="" required/>
+                </div>
+                <div>
+                    <label>Sex:</label>
+                    <input type="text" name="sex" value="" required/>
+                </div>
+                <div>
+                    <label>Birth Date:</label>
+                    <input type="datetime" name="birth_date" value="" required/>
+                </div>
+                <div class="div">
+                    <label>Hiring Date:</label>
+                    <input type="datetime" name="hiring_date" value="" required/>
+                </div>
+                <div>
+                    <label>Hours worked weekly:</label>
+                    <input type="number" name="hours_worked_weekly" value="" required/>
+                </div>
+                <div>
+                    <label>Salary:</label>
+                    <input type="number" name="salary" value="" required/>
+                </div>
             </form>
-</body>
+    </body>
 </html>
 <?php
     include "../file/validation.php";
@@ -75,11 +97,13 @@
     $salary = '';
 
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['name']) && isset($_POST['surname'])
-        && isset($_POST['cnp']) && isset($_POST['address']) && isset($_POST['sex'])
-        && isset($_POST['birth_date']) && isset($_POST['hiring_date']) && isset($_POST['salary'])
-        && isset($_POST['hours_worked_weekly']))
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id']) && isset($_POST['id_department'])
+        && isset($_POST['id_supervisor']) && isset($_POST['name']) && isset($_POST['surname'])
+        && isset($_POST['cnp']) && isset($_POST['address']) && isset($_POST['sex']) && isset($_POST['birth_date'])
+        && isset($_POST['hiring_date']) && isset($_POST['salary']) && isset($_POST['hours_worked_weekly']))
     {
+        $department = test_input($_POST['id_department']);
+        $supervisor = test_input($_POST['id_supervisor']);
         $name = test_input($_POST['name']);
         $surname = test_input($_POST['surname']);
         $cnp = test_input($_POST['cnp']);
