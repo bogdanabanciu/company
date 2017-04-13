@@ -79,7 +79,7 @@
                                     style="width: 400px; text-align: right; background-color: white; border-color: lightgrey;">
                                 <span class="caret"></span></button>
                             <input type="hidden" name="search">
-                            <ul class="dropdown-menu" style="width: 400px;">
+                            <ul class="dropdown-menu" style="width: 400px; padding: 15px">
                                 <?php
 
                                 require_once('../file/files.php');
@@ -89,19 +89,12 @@
                                     $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
                                     $db->connectToDatabase();
 
-                                    if ( isset($_GET['search']) ) {
-                                        $departments = $db->searchDepartment(test_input($_GET['search']));
-                                    }
-                                    else
-                                        $departments = $db->getDepartments();
+                                    $departments = $db->getDepartments();
 
-
-                                    if(count($departments == 0)){
-                                        echo "There are no departments!";
-                                    }
-                                    else
-                                    {
-                                        for ($i = 0; $i < count($departments); $i++)
+                                    if(count($departments) == 0)
+                                        echo "There are no departments";
+                                    else {
+                                        for($i = 0; $i < count($departments); $i++)
                                         {
                                             echo $departments[$i]->toTableName($i + 1);
                                         }

@@ -34,8 +34,7 @@ class Department
 
     public function toTableName($rowIndex)
     {
-        $row = "<li>
-                    $rowIndex</li><li>".
+        $row = "<li>".
             $this->getDepartmentname() . "</li>";
 
         return $row;
