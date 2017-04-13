@@ -37,6 +37,7 @@ class Database
     public function getEmployees()
     {
         $result = array();
+
         $sql = "SELECT * FROM employees";
 
         foreach($this->conn->query($sql) as $row)
@@ -209,6 +210,35 @@ class Database
         return $employee;
     }
 
+
+    //TODO:
+    public function addEmployee($department, $supervisor, $name, $surname,
+                                $cnp, $address,$sex, $birthDate, $hiringDate,
+                                $salary, $hoursWorkedWeekly)
+    {
+        $sql = "INSERT INTO employees(department, supervisor, name, 
+                                              surname, cnp, address, sex, hiringDate,
+                                              birthDate, salary, hoursWorkedWeekly) 
+                               VALUES(':id_department', ':id_supervisor', ':name',
+                                      ':surname', ':cnp', ':address', ':sex',
+                                      ':hiring_date', ':birth_date',':salary',
+                                      ':hours_worked_weekly')";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_department', $department, PDO::PARAM_INT);
+        $stmt->bindParam(':id_supervisor', $supervisor, PDO::PARAM_INT);
+        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
+        $stmt->bindParam(':cnp', $cnp, PDO::PARAM_STR);
+        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
+        $stmt->bindParam(':sex', $sex, PDO::PARAM_STR);
+        $stmt->bindParam(':birth_date', $birthDate, PDO::PARAM_STR);
+        $stmt->bindParam(':hiring_date', $hiringDate, PDO::PARAM_STR);
+        $stmt->bindParam(':salary', $salary, PDO::PARAM_INT);
+        $stmt->bindParam(':hours_worked_weekly', $hoursWorkedWeekly, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
     //======================================= DEPARTMENT ==========================================
 
     /*public function addDepartment($add)
@@ -216,9 +246,29 @@ class Database
         require_once('../file/actions.php');
     }*/
 
-    public function getDepartment()
+    public function searchDepartment($search)
+    {
+        $results = array();
+
+        $sql = "SELECT * FROM department";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        if($row = $stmt->fetch()){
+            $id = $row['id'];
+            $name = $row['department_name'];
+
+            $department = new Department($id, $name);
+            array_push($results, $department);
+        }
+
+        return $results;
+    }
+
+    public function getDepartments()
     {
         $result = array();
+
         $sql = "SELECT * FROM department";
 
         foreach($this->conn->query($sql) as $row)
@@ -226,7 +276,7 @@ class Database
             $id = $row['id'];
             $name = $row['department_name'];
 
-            $department = new Department($name);
+            $department = new Department($id, $name);
 
             array_push($result, $department);
         }
@@ -251,7 +301,7 @@ class Database
             $id = $row['id'];
             $name = $row['department_name'];
 
-            $department = new Department($name);
+            $department = new Department($id, $name);
         }
 
         return $department;
@@ -274,7 +324,7 @@ class Database
             $id = $row['id'];
             $name = $row['department_name'];
 
-            $department = new Department($name);
+            $department = new Department($id, $name);
         }
 
         return $department;
@@ -329,7 +379,7 @@ class Database
             $managerId = $row['id_manager'];
             $manager = $this->getEmployeeById($managerId);
 
-            $project = new Project($name);
+            $project = new Project($managerId, $name);
         }
 
         return $project;
@@ -360,7 +410,7 @@ class Database
             $managerId = $row['id_manager'];
             $manager = $this->getEmployeeById($managerId);
 
-            $project = new Project($name);
+            $project = new Project($managerId, $name);
         }
 
         return $project;

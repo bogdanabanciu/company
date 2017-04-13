@@ -11,5 +11,13 @@ require_once('../file/files.php');
 $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 $db->connectToDatabase();
 
-$employees = $db->searchEmployees("florin");
+$employees = $db->searchEmployees("Bogdana");
 
+//$deparments = $db->searchDepartment("Development");
+
+$departments = $db->getDepartments();
+
+foreach($departments as $department)
+{
+
+}

@@ -5,8 +5,9 @@ class Department
     private $id;
     private $departmentName;
 
-    public function __construct($departmentName)
+    public function __construct($id, $departmentName)
     {
+        $this->id = $id;
         $this->departmentName = $departmentName;
     }
 
@@ -28,6 +29,15 @@ class Department
         $row = "<tr onclick=\"location.href='departmentInfo.php?id=" . $this->getId() . "';\"><td>
                     $rowIndex</td><td style='text-align: center;'>".
                     $this->getDepartmentname() . "</td>";
+        return $row;
+    }
+
+    public function toTableName($rowIndex)
+    {
+        $row = "<li>
+                    $rowIndex</li><li>".
+            $this->getDepartmentname() . "</li>";
+
         return $row;
     }
 }

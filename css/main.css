@@ -1,56 +1,16 @@
+/*** Menu ***/
 .navbar li a, .navbar .navbar-brand {
     color: #fff !important;
 }
 .navbar-nav li a:hover, .navbar-nav li.active a {
     color: plum !important;
 }
-.popup-background {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 9999;
-    display: none;
+
+/*** Add employee form ***/
+.addEmployeeForm div label {
+    min-width: 150px;
 }
 
-.popup-container {
-    position: absolute;
-    margin: auto;
-    width: 600px;
-    height: 205px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 15px;
-}
-
-.popup-title {
-    width: 100%;
-    text-align: center;
-}
-
-.popup-buttons {
-    position: relative;
-    top: -25px;
-    width: 100%;
-    text-align: right;
-}
-
-.popup-loading {
-    visibility: hidden;
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    margin: 0 5px;
-    border-top: 10px solid rgba(0, 0, 0, 0.2);
-    border-right: 10px solid rgba(0, 0, 0, 0.2);
-    border-left: 10px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 10px solid rgba(0, 0, 0, 0.2);
+.addEmployeeForm div input {
+    width: 400px;
 }

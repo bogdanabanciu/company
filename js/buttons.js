@@ -1,137 +1,81 @@
-function showPopup(popup)
-{
-    var p = document.getElementById(popup);
-    p.style.display = 'block';
-}
+function addEmployee() {
+    var _action = $('#addEmployeeAction'). val();
+    var _name = $('#addEmployeeName').val();
+    var _surname = $('#addEmployeeSurname').val();
+    var _cnp = $('#addEmployeeCNP').val();
+    var _address = $('#addEmployeeAddress').val();
+    var _sex = $('#addEmployeeSex').val();
+    var _hiringDate = $('#addEmployeeHiringDate').val();
+    var _birthDate = $('#addEmployeeBirthDate').val();
+    var _salary = $('#addEmployeeSalary').val();
+    var _hoursWorkedWeekly = $('#addEmployeeHoursWorkedWeekly').val();
 
-function closePopup(popup)
-{
-    var p = document.getElementById(popup);
-    p.style.display = 'none';
-}
+    alert("am primit ceva");
 
-$(document).ready(function () {     //NU MERGE
-    var $addEmployee = $('#addEmployee');
-
-        $addEmployee.click(function () {
-                var _action = $('#addEmployeeAction'). val();
-                var _name = $('#addEmployeeName').val();
-                var _surname = $('#addEmployeeSurname').val();
-                var _cnp = $('#addEmployeeCNP').val();
-                var _address = $('#addEmployeeAddress').val();
-                var _sex = $('#addEmployeeSex').val();
-                var _hiringDate = $('#addEmployeeHiringDate').val();
-                var _birthDate = $('#addEmployeeBirthDate').val();
-                var _salary = $('#addEmployeeSalary').val();
-                var _hoursWorkedWeekly = $('#addEmployeeHoursWorkedWeekly').val();
-
-                if(_name === '' && _surname === '')
+    if(_name === '' || _surname === '' || _cnp === '' || _address === '' || _sex === '' || _hiringDate === '' ||
+        _birthDate === '' || _salary === '' || _hoursWorkedWeekly === '')
+    {
+        $('#addEmployeeName').attr('placeholder', 'Enter name');
+        $('#addEmployeeSurname').attr('placeholder', 'Enter surname');
+        $('#addEmployeeCNP').attr('placeholder', 'Enter CNP');
+        $('#addEmployeeAddress').attr('placeholder', 'Enter address');
+        $('#addEmployeeSex').attr('placeholder', 'Enter sex');
+        $('#addEmployeeHiringDate').attr('placeholder', 'Enter hiring date');
+        $('#addEmployeeBirthDate').attr('placeholder', 'Enter birth date');
+        $('#addEmployeeSalary').attr('placeholder', 'Enter salary');
+        $('#addEmployeeHoursWorkedWeekly').attr('placeholder', 'Enter hours worked weekly');
+    }
+    else {
+        //$('.popup-loading').css('visibility', 'visible');
+        $.post(
+            '../file/actions.php',
+            {
+                action: _action,
+                name: _name,
+                surname: _surname,
+                cnp: _cnp,
+                address: _address,
+                sex: _sex,
+                hiringDate: _hiringDate,
+                birthDate: _birthDate,
+                salary: _salary,
+                hoursWorkedWeekly: _hoursWorkedWeekly
+            },
+            function(data)
+            {
+                //$('.popup-loading').css('visibility', 'hidden');
+                if(data.startsWith('Success'))
                 {
-                    $('#addEmployeeName').attr('placeholder', 'Enter name');
-                    $('#addEmployeeSurname').attr('placeholder', 'Enter surname');
-                    $('#addEmployeeCNP').attr('placeholder', 'Enter CNP');
-                    $('#addEmployeeAddress').attr('placeholder', 'Enter address');
-                    $('#addEmployeeSex').attr('placeholder', 'Enter sex');
-                    $('#addEmployeeHiringDate').attr('placeholder', 'Enter hiring date');
-                    $('#addEmployeeBirthDate').attr('placeholder', 'Enter birth date');
-                    $('#addEmployeeSalary').attr('placeholder', 'Enter salary');
-                    $('#addEmployeeHoursWorkedWeekly').attr('placeholder', 'Enter hours worked weekly');
+                    //var employee_id = data.substr(20);  *ca la blog? --> see popup.js*
+                    //$('#addEmployeeForm')[0].reset();
+                    //closePopup('addEmployeePopup');
+                    alert(data);
+                    //var modal = $(this);
+                    //modal.hide();
                 }
                 else {
-                    $('.popup-loading').css('visibility', 'visible');
-                    $.post(
-                        'file/actions.php',
-                        {   //trebuie toate?
-                            action: _action,
-                            name: _name,
-                            surname: _surname,
-                            cnp: _cnp,
-                            address: _address,
-                            sex: _sex,
-                            hiringDate: _hiringDate,
-                            birthDate: _birthDate,
-                            salary: _salary,
-                            hoursWorkedWeekly: _hoursWorkedWeekly
-                        },
-                        function(data)
-                        {
-                            $('.popup-loading').css('visibility', 'hidden');
-                            if(data.startsWith('Success'))
-                            {
-                                //var employee_id = data.substr(20);  *ca la blog? --> see popup.js*
-                                $('#addEmployeeForm')[0].reset();
-                                closePopup('addEmployeePopup');
-                            }
-                            else {
-                                alert(data);
-                            }
-                        }
-                    );
+                    alert(data);
                 }
             }
-
         );
-    });      //end of addEmployee.click
+    }
+}
 
-$(document).ready(function () {     //NU ESTE IMPLEMENTAT + NU ESTE SCRIS FORM-ul
-    var $editEmployee = $('#editEmployee');
+$(document).ready(function () {
 
-        $editEmployee.click(function () {
-                var _action = $('#editEmployeeAction'). val();
-                var _name = $('#editEmployeeName').val();
-                var _surname = $('#editEmployeeSurname').val();
-                var _cnp = $('#editEmployeeCNP').val();
-                var _address = $('#editEmployeeAddress').val();
-                var _sex = $('#editEmployeeSex').val();
-                var _hiringDate = $('#editEmployeeHiringDate').val();
-                var _birthDate = $('#editEmployeeBirthDate').val();
-                var _salary = $('#editEmployeeSalary').val();
-                var _hoursWorkedWeekly = $('#editEmployeeHoursWorkedWeekly').val();
+    $('#addEmployeeModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var recipient = button.data('addEmployeeForm'); // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
-                if(_name === '' && _surname === '')     //trebuie toate?
-                {
-                    $('#editEmployeeName').attr('placeholder', 'Enter name');
-                    $('#editEmployeeSurname').attr('placeholder', 'Enter surname');
-                    $('#editEmployeeCNP').attr('placeholder', 'Enter CNP');
-                    $('#editEmployeeAddress').attr('placeholder', 'Enter address');
-                    $('#editEmployeeSex').attr('placeholder', 'Enter sex');
-                    $('#editEmployeeHiringDate').attr('placeholder', 'Enter hiring date');
-                    $('#editEmployeeBirthDate').attr('placeholder', 'Enter birth date');
-                    $('#editEmployeeSalary').attr('placeholder', 'Enter salary');
-                    $('#editEmployeeHoursWorkedWeekly').attr('placeholder', 'Enter hours worked weekly');
-                }
-                else {
-                    $('.popup-loading').css('visibility', 'visible');
-                    $.post(
-                        'file/actions.php',
-                        {   //trebuie toate?
-                            action: _action,
-                            name: _name,
-                            surname: _surname,
-                            cnp: _cnp,
-                            address: _address,
-                            sex: _sex,
-                            hiringDate: _hiringDate,
-                            birthDate: _birthDate,
-                            salary: _salary,
-                            hoursWorkedWeekly: _hoursWorkedWeekly
-                        },
-                        function(data)
-                        {
-                            $('.popup-loading').css('visibility', 'hidden');
-                            if(data.startsWith('Success'))
-                            {
-                                //var employee_id = data.substr(20);  *ca la blog? --> see popup.js*
-                                $('#editEmployeeForm')[0].reset();
-                                closePopup('editEmployeePopup');
-                            }
-                            else {
-                                alert(data);
-                            }
-                        }
-                    );
-                }
-            }
+        //alert("aici?");
 
-        );
-    });      //end of editEmployee.click
+
+
+
+        //modal.find('.modal-title').text('New message to ' + recipient);
+        //modal.find('.modal-body input').val(recipient);
+
+    });
+});
