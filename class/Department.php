@@ -39,10 +39,12 @@ class Department
         return $row;
     }
 
-    public function toSelectOption()
+    public function toSelectOption($selected)
     {
-        $row = "<option value=\"$this->id\">" .
-            $this->departmentName . "</option>";
+        $row = '<option ';
+        if ( $this->id == $selected )
+            $row .= 'selected ';
+        $row .= "value=\"$this->id\">" . $this->departmentName . "</option>";
 
         return $row;
     }

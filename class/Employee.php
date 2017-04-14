@@ -4,6 +4,7 @@ require_once("Person.php");
 
 class Employee extends Person
 {
+    private $departmentId;
     private $department = null;
     private $supervisorId;
     private $supervisor = null;
@@ -20,14 +21,14 @@ class Employee extends Person
         $address,
         $sex,
         $birthDate,
-        $department,    //de tip Department
+        $departmentId,
         $supervisorId,
         $hiringDate,
         $hoursWorkedWeekly,
         $salary)
     {
         parent::__construct($id, $name, $surname, $cnp, $address, $sex, $birthDate);
-        $this->department = $department;
+        $this->departmentId = $departmentId;
         $this->supervisorId = $supervisorId;
         $this->hiringDate = $hiringDate;
         $this->hoursWorkedWeekly = $hoursWorkedWeekly;
@@ -62,11 +63,15 @@ class Employee extends Person
             return $row;
     }
 
-    public function toSelectOption()
+    public function toSelectOption($selected, $disabled)
     {
-        $row = "<option value=\"" . $this->getId() . "';\">" . $this->getName(). " " . $this->getSurname() . "</option>";
-
-        return $row;
+        $result = '<option ';
+        if ($this->getId() == $selected)
+            $result .= 'selected ';
+        if ($this->getId() == $disabled)
+            $result .= 'disabled ';
+        $result .= "value=\"" . $this->getId() . "\">" . $this->getName(). " " . $this->getSurname() . "</option>";
+        return $result;
     }
 
     /*public function toTableRow($rowIndex)
@@ -96,7 +101,29 @@ class Employee extends Person
      */
     public function getDepartment()
     {
+        if ( $this->department )
+            return $this->department;
+
+        $db = new Database();
+        $this->department = $db->getDepartmentById($this->departmentId);
+
         return $this->department;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartmentId()
+    {
+        return $this->departmentId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupervisorId()
+    {
+        return $this->supervisorId;
     }
 
     public function addDependent(Dependent $dependent)
@@ -113,12 +140,10 @@ class Employee extends Person
         if ( $this->supervisor )
             return $this->supervisor;
 
-        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        $db->connectToDatabase();
-
+        $db = new Database();
         $this->supervisor = $db->getEmployeeById($this->supervisorId);
 
-        return $this->supervisorId;
+        return $this->supervisor;
     }
 
    /* public function getSupervisorByName()

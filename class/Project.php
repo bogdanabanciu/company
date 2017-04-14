@@ -9,10 +9,14 @@ class Project
     private $hoursWorked;
     private $managerId;
     private $manager = null;
+    private $departmentId;
+    private $department = null;
 
-    public function __construct($name, $managerID)
+    public function __construct($id, $name, $departmentID, $managerID)
     {
+        $this->id = $id;
         $this->name = $name;
+        $this->departmentId = $departmentID;
         $this->managerId = $managerID;
     }
 
@@ -63,23 +67,54 @@ class Project
             return $this->manager;
         }
 
-        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        $db->connectToDatabase();
-
+        $db = new Database();
         $this->manager = $db->getEmployeeById($this->managerId);
 
+        return $this->manager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getManagerId()
+    {
         return $this->managerId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDepartmentId()
+    {
+        return $this->departmentId;
+    }
+
+    public function getDepartment()
+    {
+        if ($this->department)
+            return $this->department;
+
+        $db = new Database();
+        $this->department = $db->getDepartmentById($this->departmentId);
+
+        return $this->department;
     }
 
     public function toTableRow($rowIndex)
     {
-        $row = "<tr onclick=\"location.href='projectInfo.php?id=" . $this->getId() . "';\"><td>
-                    $rowIndex</td><td>".
-            $this->name . "</td><td>";
-            if($this->getManager())
-                $row .= $this->getManager()->getName() . ' ' . $this->getManager()->getSurname() . "</td>";
-            else
-                $row .= "No manager</td>";
+        $row = "<tr onclick=\"location.href='projectInfo.php?id=" . $this->getId() .
+            "';\"><td>$rowIndex</td><td>" .
+            $this->name . "</td><td>" .
+            $this->getDepartment()->getDepartmentName() . '</td><td>' .
+            $this->getManager()->getName() . ' ' . $this->getManager()->getSurname() . "</td></tr>";
 
         return $row;
     }

@@ -6,10 +6,6 @@
     require_once("../class/Project.php");
     require_once("../class/Database.php");
 
-    define("DB_HOST", "localhost");
-    define("DB_USER", "root");
-    define("DB_PASSWORD", "vagrant#123");
-    define("DB_NAME", "company");
     //action in forms
     define("ACTION_ADD_DEPARTMENT", 1);
     define("ACTION_EDIT_DEPARTMENT", 2);

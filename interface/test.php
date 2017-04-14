@@ -8,8 +8,7 @@
 
 require_once('../file/files.php');
 
-$db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-$db->connectToDatabase();
+$db = new Database();
 
 $employees = $db->searchEmployees("Bogdana");
 
@@ -18,3 +17,6 @@ $departments = $db->getDepartments();
 foreach($departments as $department){
     echo $department;
 }
+
+$employee = $db->getEmployeeById(1);
+echo $employee->getSupervisor();

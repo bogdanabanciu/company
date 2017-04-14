@@ -1,14 +1,78 @@
-/*$(document).ready(function(){
-    $(".dropdown-menu li a").click(function(){
-        $("#selected").text($(this).text());
-    });
-});
-*/
+function addDepartment() {
+    var _action = $('#addDepartmentAction').val();
+    var _name = $('#addDepartmentName').val();
+
+    if ( _name === '' )
+        $('#addDepartmentName').attr('placeholder', 'Enter department name');
+    else
+    {
+        $.post(
+            '../file/actions.php',
+            {
+                action: _action,
+                name: _name,
+            },
+            function(data)
+            {
+                //$('.popup-loading').css('visibility', 'hidden');
+                if(data.startsWith('Success'))
+                {
+                    location.href = 'departmentList.php';
+                }
+                else {
+                    alert(data);
+                }
+            }
+        );
+    }
+}
+
+function addProject() {
+    var _action = $('#addProjectAction').val();
+    var _name = $('#addProjectName').val();
+    var _budget = $('#addProjectBudget').val();
+    var _deadline = $('#addProjectDeadline').val();
+
+    var e = document.getElementById("addProjectDepartment");
+    var _department = e.options[e.selectedIndex].value;
+
+    e = document.getElementById("addProjectManager");
+    var _manager = e.options[e.selectedIndex].value;
+
+    if ( _name === '' || _budget === '' || _deadline === '' || _department == -1 || _manager == -1) {
+        $('#addProjectName').attr('placeholder', 'Enter department name');
+        $('#addProjectBudget').attr('placeholder', 'Enter department budget');
+        $('#addProjectDeadline').attr('placeholder', 'Enter department deadline');
+    }
+    else
+    {
+        $.post(
+            '../file/actions.php',
+            {
+                action: _action,
+                name: _name,
+                budget: _budget,
+                deadline: _deadline,
+                department: _department,
+                manager: _manager
+            },
+            function(data)
+            {
+                //$('.popup-loading').css('visibility', 'hidden');
+                if(data.startsWith('Success'))
+                {
+                    location.href = 'projectList.php';
+                }
+                else {
+                    alert(data);
+                }
+            }
+        );
+    }
+}
 
 function addEmployee() {
     var _action = $('#addEmployeeAction'). val();
-    var _department = $('#addEmployeeDepartment').val();
-    var _supervisor = $('#addEmployeeSupervisor').val();
     var _name = $('#addEmployeeName').val();
     var _surname = $('#addEmployeeSurname').val();''
     var _cnp = $('#addEmployeeCNP').val();
@@ -19,13 +83,15 @@ function addEmployee() {
     var _salary = $('#addEmployeeSalary').val();
     var _hoursWorkedWeekly = $('#addEmployeeHoursWorkedWeekly').val();
 
-    alert("am primit ceva");
+    var e = document.getElementById("addEmployeeDepartment");
+    var _department = e.options[e.selectedIndex].value;
 
-    if(_department === '' || _name === '' || _surname === '' || _cnp === '' || _address === '' || _sex === '' || _hiringDate === '' ||
-        _birthDate === '' || _salary === '' || _hoursWorkedWeekly === '')
+    e = document.getElementById("addEmployeeSupervisor");
+    var _supervisor = e.options[e.selectedIndex].value;
+
+    if(_department == -1 || _supervisor == -1 || _name === '' || _surname === '' || _cnp === '' || _address === '' ||
+        _sex === '' || _hiringDate === '' || _birthDate === '' || _salary === '' || _hoursWorkedWeekly === '')
     {
-        $('#addEmployeeDepartment').attr('placeholder', 'Enter name');
-        $('#addEmployeeSupervisor').attr('placeholder', 'Enter name');
         $('#addEmployeeName').attr('placeholder', 'Enter name');
         $('#addEmployeeSurname').attr('placeholder', 'Enter surname');
         $('#addEmployeeCNP').attr('placeholder', 'Enter CNP');
@@ -42,29 +108,24 @@ function addEmployee() {
             '../file/actions.php',
             {
                 action: _action,
-                department: _department,
-                supervisor: _supervisor,
+                id_department: _department,
+                id_supervisor: _supervisor,
                 name: _name,
                 surname: _surname,
                 cnp: _cnp,
                 address: _address,
                 sex: _sex,
-                hiringDate: _hiringDate,
-                birthDate: _birthDate,
+                hiring_date: _hiringDate,
+                birth_date: _birthDate,
                 salary: _salary,
-                hoursWorkedWeekly: _hoursWorkedWeekly
+                hours_worked_weekly: _hoursWorkedWeekly
             },
             function(data)
             {
                 //$('.popup-loading').css('visibility', 'hidden');
                 if(data.startsWith('Success'))
                 {
-                    //var employee_id = data.substr(20);  *ca la blog? --> see popup.js*
-                    //$('#addEmployeeForm')[0].reset();
-                    //closePopup('addEmployeePopup');
-                    alert(data);
-                    //var modal = $(this);
-                    //modal.hide();
+                    $('#addEmployeeModal').hide();
                 }
                 else {
                     alert(data);
@@ -72,6 +133,28 @@ function addEmployee() {
             }
         );
     }
+}
+
+function executeAction(_action, _id, _location)
+{
+    $.post(
+        '../file/actions.php',
+        {
+            action: _action,
+            id: _id
+        },
+        function(data)
+        {
+            //$('.popup-loading').css('visibility', 'hidden');
+            if(data.startsWith('Success'))
+            {
+                location.href = _location;
+            }
+            else {
+                alert(data);
+            }
+        }
+    );
 }
 
 $(document).ready(function () {

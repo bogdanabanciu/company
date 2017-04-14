@@ -4,26 +4,18 @@ require_once("Employee.php");
 require_once("Department.php");
 require_once("Project.php");
 
+define("DB_HOST", "localhost");
+define("DB_USER", "root");
+define("DB_PASSWORD", "vagrant#123");
+define("DB_NAME", "company");
+
 class Database
 {
-    private $host;
-    private $user;
-    private $password;
-    private $db;
     private $conn;
 
-    public function __construct($host, $user, $pass, $db)
+    public function __construct()
     {
-        $this->host = $host;
-        $this->user = $user;
-        $this->password = $pass;
-        $this->db = $db;
-        $this->conn = null;
-    }
-
-    public function connectToDatabase()
-    {
-        $this->conn = new PDO("mysql:host=$this->host;dbname=$this->db", $this->user, $this->password);
+        $this->conn = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASSWORD);
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //set the PDO error mode to exception
     }
 
@@ -54,11 +46,9 @@ class Database
             $salary = $row['salary'];
 
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
             $supervisorId = $row['id_supervisor'];
-            //$supervisor = $this->getEmployeeById($supervisorId);
 
-            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $departmentId, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
             $this->loadDependents($employee);
 
             array_push($result, $employee);
@@ -91,11 +81,11 @@ class Database
             $salary = $row['salary'];
 
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
+            //$department = $this->getDepartmentById($departmentId);
             $supervisorId = $row['id_supervisor'];
             //$supervisor = $this->getEmployeeById($supervisorId);
 
-            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $departmentId, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
             $this->loadDependents($employee);
         }
 
@@ -133,13 +123,10 @@ class Database
             $hiringDate = $row['hiring_date'];
             $hoursWorkedWeekly = $row['hours_worked_weekly'];
             $salary = $row['salary'];
-
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
             $supervisorId = $row['id_supervisor'];
-            //$supervisor = $this->getEmployeeById($supervisorId);
 
-            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $departmentId, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
             $this->loadDependents($employee);
 
             array_push($result, $employee);
@@ -175,17 +162,13 @@ class Database
 
     public function getEmployeeById($id)
     {
-        $stmt = null;
-        $employee  = null;
+        $employee = null;
 
         $sql = "SELECT * FROM employees WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(array(':id' => $id));
-        $row = $stmt->fetch();
 
-        $stmt = null;
-
-        if($row)
+        if($row = $stmt->fetch())
         {
             $id = $row['id'];
             $name = $row['name'];
@@ -199,11 +182,9 @@ class Database
             $salary = $row['salary'];
 
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
             $supervisorId = $row['id_supervisor'];
-            $supervisor = $this->getEmployeeById($supervisorId);
 
-            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $department, $supervisor,$hiringDate, $hoursWorkedWeekly, $salary);
+            $employee = new Employee($id, $name, $surname, $cnp, $address, $sex, $birthDate, $departmentId, $supervisorId, $hiringDate, $hoursWorkedWeekly, $salary);
             $this->loadDependents($employee);
         }
 
@@ -216,35 +197,67 @@ class Database
                                 $cnp, $address,$sex, $birthDate, $hiringDate,
                                 $salary, $hoursWorkedWeekly)
     {
-        $sql = "INSERT INTO employees(department, supervisor, name, 
-                                              surname, cnp, address, sex, hiringDate,
-                                              birthDate, salary, hoursWorkedWeekly) 
-                               VALUES(':id_department', ':id_supervisor', ':name',
-                                      ':surname', ':cnp', ':address', ':sex',
-                                      ':hiring_date', ':birth_date',':salary',
-                                      ':hours_worked_weekly')";
+        $sql = "INSERT INTO employees(id_department, id_supervisor, name, surname, cnp, address, sex, hiring_date, birth_date, salary, hours_worked_weekly) VALUES(:id_department, :id_supervisor, :name, :surname, :cnp, :address, :sex, :hiring_date, :birth_date, :salary, :hours_worked_weekly)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id_department', $department, PDO::PARAM_INT);
-        $stmt->bindParam(':id_supervisor', $supervisor, PDO::PARAM_INT);
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
-        $stmt->bindParam(':cnp', $cnp, PDO::PARAM_STR);
-        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
-        $stmt->bindParam(':sex', $sex, PDO::PARAM_STR);
-        $stmt->bindParam(':birth_date', $birthDate, PDO::PARAM_STR);
-        $stmt->bindParam(':hiring_date', $hiringDate, PDO::PARAM_STR);
-        $stmt->bindParam(':salary', $salary, PDO::PARAM_INT);
-        $stmt->bindParam(':hours_worked_weekly', $hoursWorkedWeekly, PDO::PARAM_INT);
+        $stmt->bindParam(':id_department', $department);
+        $stmt->bindParam(':id_supervisor', $supervisor);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':surname', $surname);
+        $stmt->bindParam(':cnp', $cnp);
+        $stmt->bindParam(':address', $address);
+        $stmt->bindParam(':sex', $sex);
+        $stmt->bindParam(':birth_date', $birthDate);
+        $stmt->bindParam(':hiring_date', $hiringDate);
+        $stmt->bindParam(':salary', $salary);
+        $stmt->bindParam(':hours_worked_weekly', $hoursWorkedWeekly);
+
+        return $stmt->execute();
+    }
+
+    public function removeEmployeeById($id)
+    {
+        $sql = 'DELETE FROM employees WHERE id = :id';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
+    }
+
+    public function updateEmployee($employee)
+    {
+        $sql = "UPDATE employees SET id_department = :department, id_supervisor = :supervisor, name = :name,
+                                           surname = :surname, cnp = :cnp, address = :address, sex = :sex,
+                                           hiring_date = :hiring_date, birth_date = :birth_date, salary = :salary,
+                                           hours_worked_weekly = :hours_worked_weekly 
+                                       WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindParam(':id', $employee->getId());
+        $stmt->bindParam(':department', $employee->getDepartmentId());
+        $stmt->bindParam(':supervisor', $employee->getSupervisorId());
+        $stmt->bindParam(':name', $employee->getName());
+        $stmt->bindParam(':surname', $employee->getSurname());
+        $stmt->bindParam(':cnp', $employee->getCnp());
+        $stmt->bindParam(':address', $employee->getAddress());
+        $stmt->bindParam(':sex', $employee->getSex());
+        $stmt->bindParam(':birth_date', $employee->getBirthDate());
+        $stmt->bindParam(':hiring_date', $employee->getHiringDate());
+        $stmt->bindParam(':salary', $employee->getSalary());
+        $stmt->bindParam(':hours_worked_weekly', $employee->getHoursWorkedWeekly());
 
         return $stmt->execute();
     }
 
     //======================================= DEPARTMENT ==========================================
 
-    /*public function addDepartment($add)
+    public function addDepartment($name)
     {
-        require_once('../file/actions.php');
-    }*/
+        $sql = "INSERT INTO department(department_name) VALUES(:department_name)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':department_name', $name);
+
+        return $stmt->execute();
+    }
 
     public function searchDepartment($search)
     {
@@ -332,7 +345,7 @@ class Database
 
     //======================================== PROJECT =============================================
 
-    public function getProject()
+    public function getProjects()
     {
         $result = array();
         $sql = "SELECT * FROM project";
@@ -342,11 +355,15 @@ class Database
             $id = $row['id'];
             $name = $row['name'];
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
             $managerId = $row['id_manager'];
-            $manager = $this->getEmployeeById($managerId);
+            $budget = $row['budget'];
+            $deadline = $row['deadline'];
+            $hoursWorked = $row['hours_worked'];
 
-            $project = new Project($name, $manager);
+            $project = new Project($id, $name, $departmentId, $managerId);
+            $project->setBudget($budget);
+            $project->setDeadline($deadline);
+            $project->setHoursWorked($hoursWorked);
 
             array_push($result, $project);
         }
@@ -356,30 +373,26 @@ class Database
 
     public function getProjectById($id)
     {
-        $stmt = null;
         $project = null;
 
         $sql = "SELECT * FROM project WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(array(':id' => $id));
-        $row = $stmt->fetch();
 
-        $stmt = null;
-
-        if($row)
+        if($row = $stmt->fetch())
         {
             $id = $row['id'];
             $name = $row['name'];
             $budget = $row['budget'];
             $deadline = $row['deadline'];
             $hoursWorked = $row['hours_worked'];
-
             $departmentId = $row['id_department'];
-            $department = $this->getDepartmentById($departmentId);
             $managerId = $row['id_manager'];
-            $manager = $this->getEmployeeById($managerId);
 
-            $project = new Project($managerId, $name);
+            $project = new Project($id, $name, $departmentId, $managerId);
+            $project->setBudget($budget);
+            $project->setDeadline($deadline);
+            $project->setHoursWorked($hoursWorked);
         }
 
         return $project;
@@ -414,6 +427,28 @@ class Database
         }
 
         return $project;
+    }
+
+    public function addProject($name, $departmentId, $managerId, $deadline, $budget)
+    {
+        $sql = "INSERT INTO project(id_department, name, budget, deadline, id_manager) VALUES(:department, :name, :budget, :deadline, :manager)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':department', $departmentId);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':budget', $budget);
+        $stmt->bindParam(':deadline', $deadline);
+        $stmt->bindParam(':manager', $managerId);
+
+        return $stmt->execute();
+    }
+
+    public function removeProjectById($id)
+    {
+        $sql = 'DELETE FROM project WHERE id = :id';
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        return $stmt->execute();
     }
 
     public function __destruct()

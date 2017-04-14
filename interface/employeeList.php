@@ -12,25 +12,34 @@
     <title>Zitec</title>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60" style="padding: 85px">
-    <nav class="navbar navbar-default navbar-fixed-top" style="background: url(bgmypage.jpg); border:none;">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="index.php#about">ABOUT</a></li>
-                    <li><a href="employeeList.php">EMPLOYEES</a></li>
-                    <li><a href="departmentList.php">DEPARTMENTS</a></li>
-                    <li><a href="projectList.php">PROJECTS</a></li>
-                </ul>
-            </div>
+<nav class="navbar navbar-default navbar-fixed-top" style="background: url(bgmypage.jpg); border:none;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
         </div>
-    </nav>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="index.php#about">ABOUT</a></li>
+                <li><a href="employeeList.php">EMPLOYEES</a></li>
+                <li><a href="departmentList.php">DEPARTMENTS</a></li>
+                <li><a href="projectList.php">PROJECTS</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<?php
+    require_once('../file/files.php');
+    require_once('../file/validation.php');
+
+    try {
+        $db = new Database();
+?>
+
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmployeeModal" style="float:right;background-color: #885EAD; border-color: #885EAD;">
         Add Employee
     </button>
@@ -71,65 +80,39 @@
                             <label>Birth Date:</label>
                             <input id="addEmployeeBirthDate" type="datetime" name="birth_date" required/>
                         </div>
-                        <!-- TODO: departament dropdown list -->
                         <div>
                             <label>Department:</label>
-                            <select id="addEmployeeDepartment" class="selectpicker" style="width: 400px; background-color: white; border-color: lightgrey; padding: 10px">
-                                <?php
+                            <?php
+                                $departments = $db->getDepartments();
 
-                                    require_once('../file/files.php');
-                                    require_once('../file/validation.php');
+                                if(count($departments) == 0)
+                                    echo "<select disabled ";
+                                else
+                                    echo "<select ";
 
-                                    try {
-                                        $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-                                        $db->connectToDatabase();
+                                echo 'id="addEmployeeDepartment" class="selectpicker" style="width: 400px; background-color: white; border-color: lightgrey; padding: 10px">';
 
-                                        $departments = $db->getDepartments();
-
-                                        if(count($departments) == 0)
-                                            echo "There are no departments";
-                                        else {
-                                            foreach($departments as $department){
-                                                echo $department->toSelectOption();
-                                            }
-                                        }
-                                    }
-                                    catch(PDOException $exception)
-                                    {
-                                        echo "Error: connection failed" . $exception->getMessage();
-                                    }
-                                    ?>
+                                if (count($departments) == 0)
+                                    echo "<option>There are no departments</option>";
+                                else
+                                {
+                                    echo '<option value="-1">Select department</option>';
+                                    foreach($departments as $department)
+                                        echo $department->toSelectOption(-1);
+                                }
+                            ?>
                             </select>
                         </div>
                         <div>
-                            <!-- TODO: supervisor dropdown list: all employees (name and surname only) -->
                             <label>Supervisor:</label>
                             <select id="addEmployeeSupervisor" class="selectpicker" style="width: 400px; background-color: white; border-color: lightgrey; padding: 10px">
-                                <?php
+                            <?php
+                                $employees = $db->getEmployees();
 
-                                require_once('../file/files.php');
-                                require_once('../file/validation.php');
-
-                                try {
-                                    $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-                                    $db->connectToDatabase();
-
-                                    $employees = $db->getEmployees();
-
-                                    if(count($employees) == 0)
-                                        echo "There are no employees!";
-                                    else {
-                                        foreach($employees as $employee)
-                                        {
-                                            echo $employee->toSelectOption();
-                                        }
-                                    }
-                                }
-                                catch(PDOException $exception)
-                                {
-                                    echo "Error: connection failed" . $exception->getMessage();
-                                }
-                                ?>
+                                echo '<option value="-1">Select supervisor</option>';
+                                foreach($employees as $employee)
+                                    echo $employee->toSelectOption(-1, -1);
+                            ?>
                             </select>
                         </div>
                         <div>
@@ -145,6 +128,7 @@
                             <input id="addEmployeeSalary" type="number" name="salary" required/>
                         </div>
                     </form>
+                    <p></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -176,15 +160,8 @@
         <tbody>
 
 <?php
-
-try
-{
-    $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $db->connectToDatabase();
-
-     if ( isset($_GET['search']) ) {
+     if ( isset($_GET['search']) )
          $employees = $db->searchEmployees(test_input($_GET['search']));
-     }
     else
         $employees = $db->getEmployees();
 
@@ -196,16 +173,20 @@ try
             echo $employees[$i]->toTableRow($i + 1);
         }
     }
-
-}
-catch(PDOException $exception)
-{
-    echo "Error: connection failed" . $exception->getMessage();
-}
-
 ?>
 
         </tbody>
     </table>
+
+<?php
+    }
+    catch(PDOException $ex)
+    {
+        ?>
+        <p color="red">Database error!</p>
+        <?php
+    }
+?>
+
 </body>
 </html>

@@ -1,3 +1,7 @@
+<?php
+    require_once('../file/files.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,6 +11,7 @@
         <link rel="stylesheet" href="../css/main.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="../js/buttons.js"></script>
         <!--  End of LINKS  -->
         <title>Zitec</title>
     </head>
@@ -33,20 +38,14 @@
         <h1>Departments</h1>
         <br>
         <form action="../file/actions.php" method="post">
-            <input type="hidden" name="action" value="<?= ACTION_ADD_DEPARTMENT ?>">
-            <input type="hidden" name="id" value="<?=$department_id ?>">
+            <input type="hidden" id="addDepartmentAction" value="<?=ACTION_ADD_DEPARTMENT?>">
             <div class="input-group">
-                <input type="text" name="add" value="<?= $department_name ?>" class="form-control" size="75px" placeholder="Add department" required>
+                <input type="text" id="addDepartmentName" class="form-control" size="75px" placeholder="Add department" required>
                 <div class="input-group-btn">
-                    <button type="button" class="btn btn-danger" style="background-color: #885EAD; border-color: #885EAD;">Submit</button>
+                    <button type="button" onclick="addDepartment();" class="btn btn-danger" style="background-color: #885EAD; border-color: #885EAD;">Submit</button>
                 </div>
             </div>
         </form>
-        <?php
-            require_once('../file/files.php');
-            require_once('../file/validation.php');
-        ?>
-
         <table class="table table-hover" style="margin-top: 50px">
             <thead>
                 <tr style="font-weight: bold">
@@ -56,17 +55,9 @@
             </thead>
             <tbody>
             <?php
-            $department_id = '';
-            $department_name = '';
             try
             {
-                $db = new Database(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-                $db->connectToDatabase();
-
-                /*if ( isset($_GET['add']) ) {
-                    $departments = $db->addDepartment(test_input($_GET['add']));
-                }
-                else*/
+                $db = new Database();
                 $departments = $db->getDepartments();
 
                 if(count($departments) == 0)
